@@ -1,5 +1,6 @@
 import json
 import speech_recognition as sr
+from playsound import playsound
 wake_outside='''
 {
 "wake": {
@@ -11,15 +12,15 @@ wake_outside='''
 '''
 def takeinput():
     with sr.Microphone() as source:
-        print("Say something!")
+        playsound('C:/Users/Admin/Downloads/speaknow.mp3')
         audio = r.listen(source)
     return audio
 
 def liftgoesup():#pseudo func
-    print("yes lift is going up")
+    playsound('C:/Users/Admin/Downloads/yesliftgoingup.mp3')
 
 def liftgoesdown():#psuedo func
-    print("yes lift is going down")
+    playsound('C:/Users/Admin/Downloads/yesliftgoingdown.mp3')
 
 r = sr.Recognizer()
 audio1 = takeinput() #to listen to the wake word
@@ -29,16 +30,21 @@ data = json.loads(wake_outside)
 k = 0
 
 if(r.recognize_sphinx(audio1) == data['wake']['keyphrase']):
-    print("Please choose up or down")
+    playsound('C:/Users/Admin/Downloads/chooseupordown.mp3')
     while(k == 0):
         with sr.Microphone() as source:
             audio2 = takeinput()
-            print("you said:" + r.recognize_sphinx(audio2))
-        if(r.recognize_sphinx(audio2) == 'up'):
-            k = 1
-            liftgoesup()#pseudo function
-        elif(r.recognize_sphinx(audio2) == 'down'):
-            k = 1
-            liftgoesdown()#pseudo function
-        else:
-            print("Please make the choice again")
+            try:
+                print("Sphinx thinks you said " + r.recognize_sphinx(audio2))
+                if(r.recognize_sphinx(audio2) == 'up'):
+                    k = 1
+                    liftgoesup()#pseudo function
+                elif(r.recognize_sphinx(audio2) == 'down'):
+                    k = 1
+                    liftgoesdown()#pseudo function
+                else:
+                    playsound('C:/Users/Admin/Downloads/choice again.mp3')
+            except sr.UnknownValueError:
+                playsound('C:/Users/Admin/Downloads/sphinxcouldnot.mp3')
+            except sr.RequestError as e:
+                print("Sphinx error; {0}".format(e))
