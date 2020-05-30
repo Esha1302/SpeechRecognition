@@ -1,50 +1,55 @@
 import json
 import speech_recognition as sr
 from playsound import playsound
-wake_outside='''
-{
-"wake": {
-    "keyphrase": "open",
-    "threshold": 1e-30,
-    "chunk_size": 960
-  }
-}
-'''
-def takeinput():
-    with sr.Microphone() as source:
-        playsound('C:/Users/Admin/Downloads/speaknow.mp3')
-        audio = r.listen(source)
-    return audio
+import Functions
+import os
 
-def liftgoesup():#pseudo func
-    playsound('C:/Users/Admin/Downloads/yesliftgoingup.mp3')
+with open('./jsondata.txt') as o1:
+      data = json.loads(o1.read())
 
-def liftgoesdown():#psuedo func
-    playsound('C:/Users/Admin/Downloads/yesliftgoingdown.mp3')
+while(True):
 
-r = sr.Recognizer()
-audio1 = takeinput() #to listen to the wake word
-print("you said:" + r.recognize_sphinx(audio1))
-data = json.loads(wake_outside)
+    audio1 = Functions.takeinput() #to listen to the wake word
 
-k = 0
+    text1 =  Functions.recognize(audio1)
+    #print("you said:" + text1)
+    k = 0
 
-if(r.recognize_sphinx(audio1) == data['wake']['keyphrase']):
-    playsound('C:/Users/Admin/Downloads/chooseupordown.mp3')
-    while(k == 0):
-        with sr.Microphone() as source:
-            audio2 = takeinput()
+    if(text1 == data['wake']['keyphrase'] or 'open' in text1):
+
+        playsound(data['mp3 tracks']['upordown'])
+
+        while(k == 0):
+
+            audio2 = Functions.takeinput()
+            text2 = Functions.recognize(audio2)
+
             try:
-                print("Sphinx thinks you said " + r.recognize_sphinx(audio2))
-                if(r.recognize_sphinx(audio2) == 'up'):
+                #print("Sphinx thinks you said " + text2)
+                if 'up' in text2 or text2 in data['up']:
                     k = 1
-                    liftgoesup()#pseudo function
-                elif(r.recognize_sphinx(audio2) == 'down'):
+                    Functions.liftgoesup()#pseudo function
+                elif 'down' in text2 or text2 in data['down']:
                     k = 1
-                    liftgoesdown()#pseudo function
+                    Functions.liftgoesdown()#pseudo function
                 else:
-                    playsound('C:/Users/Admin/Downloads/choice again.mp3')
+                    #print("Sphinx thinks you said " + text2)
+                    playsound(data['mp3 tracks']['choice again'])
+
             except sr.UnknownValueError:
-                playsound('C:/Users/Admin/Downloads/sphinxcouldnot.mp3')
+                playsound(data['mp3 tracks']['errormessage'])
+
             except sr.RequestError as e:
                 print("Sphinx error; {0}".format(e))
+
+    elif(text1==data['wake']['stopphrase'] or 'stop' in text1):
+        break;
+
+    else:
+        playsound(data['mp3 tracks']['errormessage'])
+        playsound(data['mp3 tracks']['choice again'])
+
+
+
+
+
