@@ -1,0 +1,20 @@
+{                       
+"wake": {               
+    "keyphrase": "open",
+    "stopphrase":"stop",
+    "threshold": 1e-30, 
+    "chunk_size": 960   
+  },
+"mp3 tracks": {
+    "Speak now": "./speaknow.mp3",
+    "choice again": "./choice again.mp3",
+    "upordown": "./chooseupordown.mp3",
+    "errormessage": "./sphinxcouldnot.mp3",
+    "upmessage": "./yesliftgoingup.mp3",
+    "downmessage": "./yesliftgoingdown.mp3"
+  },
+"up": ["up","go up","move up"],
+"down": ["down","go down","move down"]                   
+}                       
+
+
