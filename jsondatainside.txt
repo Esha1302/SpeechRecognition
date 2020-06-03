@@ -1,0 +1,16 @@
+{
+  "wake":
+  {
+	"keyphrase": "change",
+	"number of floors": 12,
+	"stopphrase": "stop"
+  },
+
+  "mp3 tracks":
+   {
+	"make floor choice": "./choosefloornumber.mp3",
+	"changing floor message": "./changingfloor.mp3",
+	"error message": "./sphinxcouldnot.mp3",
+	"choice again": "./choice again.mp3"
+   }
+ }        
