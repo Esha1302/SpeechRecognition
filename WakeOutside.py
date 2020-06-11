@@ -1,5 +1,6 @@
 import time
-from Functions import *
+from DeepSpeech.Functions import *
+import playsound
 p = 1
 while(True and p!=0):
     time.sleep(5)
@@ -14,7 +15,7 @@ while(True and p!=0):
             print("you said:" + text1)
             k = 0
             if(text1 == datao['wake']['keyphrase'] or 'open' in text1):
-                playsound(datao['mp3 tracks']['upordown'])
+                playsoundVoice(datao['mp3 tracks']['upordown message'])
                 while(k == 0):
                     audio2 = takeinput()
                     text2 = recognize(audio2)
@@ -28,10 +29,10 @@ while(True and p!=0):
                             liftgoesdown()#pseudo function
                         else:
                             #print("Sphinx thinks you said " + text2)
-                            playsound(datao['mp3 tracks']['choice again'])
+                            playsound(datao['mp3 tracks']['choice again message'])
 
                     except sr.UnknownValueError:
-                        playsound(datao['mp3 tracks']['errormessage'])
+                        playsound(datao['mp3 tracks']['error message'])
 
                     except sr.RequestError as e:
                         print("Sphinx error; {0}".format(e))
@@ -39,8 +40,8 @@ while(True and p!=0):
                 p = 0
                 break;
             else:
-                playsound(datao['mp3 tracks']['errormessage'])
-                playsound(datao['mp3 tracks']['choice again'])
+                playsoundVoice(datao['mp3 tracks']['error message'])
+                playsoundVoice(datao['mp3 tracks']['choice again message'])
 
 
 

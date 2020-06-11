@@ -1,6 +1,8 @@
 from word2number import w2n
-from Functions import *
+from DeepSpeech.Functions import *
 import time
+import playsound
+
 p = 1
 while(True and p!=0):
     time.sleep(5)
