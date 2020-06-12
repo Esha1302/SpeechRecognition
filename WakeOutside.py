@@ -1,49 +1,46 @@
 import time
 from DeepSpeech.Functions import *
-import playsound
+
+
 p = 1
-while(True and p!=0):
+while (True and p != 0):
     time.sleep(5)
     result, datao = get_configOutside()
     if result == 0:
         print("File not found")
+        str = playsound("file not found message", datao)
         continue
     else:
-        while(True):
-            audio1 = takeinput() #to listen to the wake word
-            text1 =  recognize(audio1)
-            print("you said:" + text1)
-            k = 0
-            if(text1 == datao['wake']['keyphrase'] or 'open' in text1):
-                playsoundVoice(datao['mp3 tracks']['upordown message'])
-                while(k == 0):
-                    audio2 = takeinput()
-                    text2 = recognize(audio2)
-                    try:
-                        print("Sphinx thinks you said " + text2)
-                        if 'up' in text2 or text2 in datao['up']:
-                            k = 1
-                            liftgoesup()#pseudo function
-                        elif 'down' in text2 or text2 in datao['down']:
-                            k = 1
-                            liftgoesdown()#pseudo function
-                        else:
-                            #print("Sphinx thinks you said " + text2)
-                            playsound(datao['mp3 tracks']['choice again message'])
+        while (True):
+            audio1 = takeinput(datao)  # to listen to the wake word
+            try:
+                text1 = recognizeSphinx(audio1)
+                print(text1)
+                add_prediction(text1)
+                k = 0
+                if (text1 == datao['wake']['keyphrase'] or 'open' in text1):
+                    playsound("upordown message", datao)
+                    while (k == 0):
+                        audio2 = takeinput(datao)
+                        try:
+                            text2 = recognizeSphinx(audio2)
+                            add_prediction(text2)
+                            if 'up' in text2 or text2 in datao['up']:
+                                k = 1
+                                liftgoesup(datao)  # pseudo function
+                            elif 'down' in text2 or text2 in datao['down']:
+                                k = 1
+                                liftgoesdown(datao)  # pseudo function
+                            else:
+                                playsound("choice again messgae", datao)
 
-                    except sr.UnknownValueError:
-                        playsound(datao['mp3 tracks']['error message'])
+                        except sr.UnknownValueError:
+                            playsound("error message", datao)
 
-                    except sr.RequestError as e:
-                        print("Sphinx error; {0}".format(e))
-            elif(text1==datao['wake']['stopphrase'] or 'stop' in text1):
-                p = 0
-                break;
-            else:
-                playsoundVoice(datao['mp3 tracks']['error message'])
-                playsoundVoice(datao['mp3 tracks']['choice again message'])
+                elif (text1 == datao['wake']['stopphrase'] or 'stop' in text1):
+                    p = 0
+                    break;
 
-
-
-
-
+            except:
+                playsound("error message", datao)
+                playsound("choice again message", datao)
