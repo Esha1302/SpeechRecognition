@@ -2,60 +2,83 @@ import json
 from deepspeech import Model
 import numpy as np
 import speech_recognition as sr
-import playsound
+import os
+import datetime
+
+r = sr.Recognizer()
 
 
 def logger(error_string):
-    with open("./log.txt","a+") as log_:
-        log_.write(error_string +'\n')
+    with open("Log error files/log.txt", "a+") as log_:
+        log_.write(error_string + '\n')
+
+def add_prediction(predicted_string):
+    with open("Log error files/Word prediction files.txt","a+") as pred_:
+        pred_.write(displaytimedate())
+        pred_.write("String precited is : ",predicted_string + '\n')
+
+def displaytimedate():
+    now = datetime.datetime.now()
+    return("Current date and time : ",now.strftime("%Y-%m-%d %H:%M:%S"))
+
 
 def get_configOutside():
     try:
-        with open('jsondata.txt') as o1:
+        with open('Config files/jsondata.txt') as o1:
             dataoutside = json.loads(o1.read())
-            return 1,dataoutside
+            return 1, dataoutside
     except Exception as e:
         logger("error - {}".format(e))
         print("error - {}".format(e))
-        return 0,0
+        return 0, 0
 
-def takeinput():
-    r = sr.Recognizer()
-    with sr.Microphone(sample_rate=16000) as source:
-        playsound(get_configOutside()[1]['mp3 tracks']['Speak now message'])
+
+def takeinput(datao):
+    with sr.Microphone() as source:
+        r.adjust_for_ambient_noise(source)
+        #playsound("Speak now message", datao)
+        print("speak now")
         audio = r.listen(source)
     return audio
 
-def recognize(audio1):
+
+def recognizeDS(audio1):
     beam_width = 500
-    model_name = "deepspeech-0.7.3-models.pbmm"
-    if __name__ == '__main__':
-        ds = Model(model_name)
-        ds.setBeamWidth(beam_width)
-        audio1 = np.frombuffer(audio1.frame_data, np.int16)
+    model_name = "Models/deepspeech-0.7.3-models.pbmm"
+    ds = Model(model_name)
+    ds.setBeamWidth(beam_width)
+    audio1 = np.frombuffer(audio1.frame_data, np.int16)
+    return (ds.stt(audio1))
 
-    return(ds.stt(audio1))
 
-def liftgoesup():#pseudo func
-    playsound("Yes, lift is going up")
+def recognizeSphinx(audio1):
+    print("hello")
+    return r.recognize_sphinx(audio1)
 
-def liftgoesdown():#psuedo func
-    playsound("Yes, lift is going down")
+def liftgoesup(datao):  # pseudo func
+    playsound("up message",datao)
+
+
+def liftgoesdown(datao):  # psuedo func
+    playsound("down message",datao)
+
 
 def get_configInside():
     try:
-        with open('jsondatainside.txt') as o1:
+        with open('Config files/jsondatainside.txt') as o1:
             datainside = json.loads(o1.read())
-            return 1,datainside
+            return 1, datainside
     except Exception as e:
         logger("error - {}".format(e))
         print("error - {}".format(e))
-        return 0,0
+        return 0, 0
 
-def floorchange(n):#pseudo func
-    print('changing floor to: ',n)
-    playsound(get_configInside()[1]['mp3 tracks']['changing floor message'])
+def floorchange(n, datai):  # pseudo func
+    print('changing floor to: ', n)
+    playsound("changing floor message",datai)
 
 
-
+def playsound(message,data):
+    str = data['mp3 tracks'][message]
+    os.system("mpg123 " + str)
 
