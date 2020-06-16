@@ -3,14 +3,16 @@
   {
 	"keyphrase": "change",
 	"number of floors": 12,
+	"current floor": 3,
 	"stopphrase": "stop"
   },
 
   "mp3 tracks":
    {
-	"make floor choice": "./choosefloornumber.mp3",
-	"changing floor message": "./changingfloor.mp3",
-	"error message": "./sphinxcouldnot.mp3",
-	"choice again": "./choice again.mp3"
+	"floor choice message": "audio/floorchoice.mp3",
+	"changing floor message": "audio/changingfloor.mp3",
+	"same floor message": "audio/samefloor.mp3",
+	"error message": "audio/errormessage.mp3",
+	"choice again message": "audio/choiceagain.mp3"
    }
- }        
+}
