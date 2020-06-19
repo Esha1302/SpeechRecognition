@@ -17,9 +17,12 @@ def logger(error_string): #to append date, time and the error that occured
         log_.write(" Error: " + error_string + '\n')
 
 def add_prediction(predicted_string): #to append date, time and predicted string
-    with open("Log error files/Word prediction file.txt","a+") as pred_:
-        pred_.write(displaytimedate()[0]+" "+displaytimedate()[1])
-        pred_.write(" String predicted is : " + predicted_string + '\n')
+    try:
+        with open("Log error files/Word prediction file.txt","a+") as pred_:
+            pred_.write(displaytimedate()[0]+" "+displaytimedate()[1])
+            pred_.write(" String predicted is : " + predicted_string + '\n')
+    except Exception as e:
+        logger("error - {}".format(e))
 
 def displaytimedate(): #returns date and time to function call
     now = datetime.datetime.now()
@@ -35,31 +38,31 @@ def get_configOutside(): #loads file for WakeOutside.py
         logger("error - {}".format(e)) #calls logger function and passes error string
         return 0, 0
 
-def takeinput(data): #takes audio input using pyaudio and speech recognition
-    with sr.Microphone(sample_rate=16000) as source: #16khz is the sample rate expected by models
+def take_input(data): #takes audio input using pyaudio and speech recognition
+    with sr.Microphone(sample_rate=16000, device_index=data['wake']['device_index']) as source: #16khz is the sample rate expected by models
         r.adjust_for_ambient_noise(source) #adjusting to background noise
-        playsound("Speak now message", data) #tells user to speak now
+        playsound("Speak_now_message", data) #tells user to speak now
         audio = r.listen(source)
     return audio #returns audio input
 
 
-def recognizeDS(audio1):
+def recognize_DS(audio1, data):
     beam_width = 500 #how many different word sequences will the model take into account
-    model_name = "Models/deepspeech-0.7.3-models.pbmm"
+    model_name = data['wake']['model name']
     ds = Model(model_name)
     ds.setBeamWidth(beam_width)
     audio1 = np.frombuffer(audio1.frame_data, np.int16) #converts into numpy array
     return (ds.stt(audio1)) #returning predicted audio
 
 
-def recognizeSphinx(audio1):
+def recognize_Sphinx(audio1):
     return r.recognize_sphinx(audio1) #returning audio via pocketsphinx
 
 def liftgoesup(datao):  # pseudo func
-    playsound("up message",datao)
+    playsound("up_message",datao)
 
 def liftgoesdown(datao):  # psuedo func
-    playsound("down message",datao)
+    playsound("down_message",datao)
 
 def get_configInside(): #loads file for WakeInside.py
     try:
@@ -71,8 +74,8 @@ def get_configInside(): #loads file for WakeInside.py
         return 0, 0
 
 
-def floorchange(n, datai):  # pseudo func
+def floor_change(n, datai):  # pseudo func
     print('changing floor to: ', n)
-    playsound("changing floor message",datai)
+    playsound("changing_floor_message",datai)
 
 
